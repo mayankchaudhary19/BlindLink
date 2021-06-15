@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1073067911148",
+    "project_id": "blind-link",
+    "storage_bucket": "blind-link.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073067911148:android:46d89140ecfdec5eb2c2c9",
+        "android_client_info": {
+          "package_name": "com.example.blindlink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1073067911148-72s28j70f6hn5d8ja6f55hgcu2vbt2f6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa3ky8_s5uJiS3ZzRAf4IF20mP4_HnJy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1073067911148-72s28j70f6hn5d8ja6f55hgcu2vbt2f6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
