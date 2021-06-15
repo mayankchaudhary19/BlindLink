@@ -22,7 +22,7 @@ public class AccountActivity extends AppCompatActivity {
     private Pattern VALID_CONTACT_REGEX = Pattern.compile("^((?!(0))[0-9]{10})$");
     private Pattern VALID_EMAIL_REGEX = Pattern.compile("^[a-z0-9](\\.?[a-z0-9]){5,}@g(oogle)?mail\\.com$\n");
     private CircleImageView profileImg;
-    private TextInputEditText careGiverEmail, contact_no;
+    private TextInputEditText visuallyImpairedContact, caregiverContact;
     private TextView saveChanges, setHomeAddr;
 
     float Latitude, Longitude;
@@ -33,8 +33,8 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         profileImg = findViewById(R.id.profile_image);
-        careGiverEmail = findViewById(R.id.caregiverEmail);
-        contact_no = findViewById(R.id.contactno);
+        visuallyImpairedContact = findViewById(R.id.visually_impaired_contact);
+        caregiverContact = findViewById(R.id.caregiver_contact);
         saveChanges = findViewById(R.id.saveChanges_btn);
         setHomeAddr = findViewById(R.id.set_home_addr);
 
@@ -53,29 +53,27 @@ public class AccountActivity extends AppCompatActivity {
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                careGiverEmail.setError(null);
-                contact_no.setError(null);
-                if (careGiverEmail.getText().toString().isEmpty()) {
-                    careGiverEmail.setError("Required!");
+
+                if (caregiverContact.getText().toString().isEmpty()) {
+                    caregiverContact.setError("Required!");
                     return;
                 }
-                if (contact_no.getText().toString().isEmpty()) {
-                    contact_no.setError("Required!");
-                    return;
-                }
-                if (!VALID_CONTACT_REGEX.matcher(contact_no.getText().toString()).find()) {
-                    contact_no.setError("Invalid Phone Number");
-                    return;
-                }
-                if (!VALID_EMAIL_REGEX.matcher(careGiverEmail.getText().toString()).find()) {
-                    careGiverEmail.setError("Invalid G-mail ID");
+                if (!VALID_CONTACT_REGEX.matcher(caregiverContact.getText().toString()).find()) {
+                    caregiverContact.setError("Invalid Phone Number");
                     return;
                 }
 
-                SharedPref.write(SharedPref.CAREGIVER_CONTACT, contact_no.getText().toString());//save string in shared preference.
-                SharedPref.write(SharedPref.CAREGIVER_EMAIL, careGiverEmail.getText().toString());//save int in shared preference.
+                if (visuallyImpairedContact.getText().toString().isEmpty()) {
+                    visuallyImpairedContact.setError("Required!");
+                    return;
+                }
+                if (!VALID_CONTACT_REGEX.matcher(visuallyImpairedContact.getText().toString()).find()) {
+                    visuallyImpairedContact.setError("Invalid Phone Number");
+                    return;
+                }
 
-
+                SharedPref.write(SharedPref.CAREGIVER_CONTACT, caregiverContact.getText().toString());//save string in shared preference.
+                SharedPref.write(SharedPref.VISUALLY_IMPAIRED_CONTACT, visuallyImpairedContact.getText().toString());//save int in shared preference.
             }
         });
 

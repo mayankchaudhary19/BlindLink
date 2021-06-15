@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.blindlink.utils.Dialogs;
 import com.example.blindlink.utils.SharedPref;
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
@@ -40,6 +42,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -67,13 +70,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private long mLastClickTime = 0;
 
+    private TextView checkLocationOrEmergency;
+
     //call
     private CardView call;
+//
+//    private Dialogs user
 
     UsbManager usbManager;
     UsbDevice device;
     UsbSerialDevice serialPort;
     UsbDeviceConnection connection;
+
 
     UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() { //Defining a Callback which triggers whenever data is read.
         @Override
@@ -137,10 +145,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             getSupportActionBar().hide();
         }
 
-        SharedPref.init(getApplicationContext());
+        SharedPref.init(MainActivity.this);
 
         final String home_lat = SharedPref.read(SharedPref.HOME_LATITUDE, null);//read string in shared preference.
         final String home_long = SharedPref.read(SharedPref.HOME_LONGITUDE, null);//read int in shared preference.
+        final String user_type = SharedPref.read(SharedPref.USER_TYPE, null);//read int in shared preference.
+        final String caregiver_contact = SharedPref.read(SharedPref.CAREGIVER_CONTACT, null);//read int in shared preference.
+        final String visually_impaired_contact = SharedPref.read(SharedPref.VISUALLY_IMPAIRED_CONTACT, null);//read int in shared preference.
 
         usbManager = (UsbManager) getSystemService(this.USB_SERVICE);
 
@@ -156,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         userName = findViewById(R.id.name);
         profileImage = findViewById(R.id.profileImage);
 
+        checkLocationOrEmergency = findViewById(R.id.check_location_or_emergency);
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -164,6 +177,33 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        if(user_type==null){
+            final Dialog userDialog = Dialogs.setUserDialog(MainActivity.this);
+            userDialog.show();
+            TextView caregiverBtn = userDialog.findViewById(R.id.caregiver_user_btn);
+            TextView visuallyImpairedBtn = userDialog.findViewById(R.id.visually_impaired_user_btn);
+
+            caregiverBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPref.write(SharedPref.USER_TYPE, "caregiver");//read int in shared preference.
+                    userDialog.dismiss();
+                }
+            });
+
+            visuallyImpairedBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPref.write(SharedPref.USER_TYPE, "visually-impaired");//read int in shared preference.
+                    userDialog.dismiss();
+                }
+            });
+        }else if(user_type.equals("caregiver")){
+            setOption(false);
+        }else{
+            setOption(true);
+        }
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String contact = user_type.equals("caregiver") ? caregiver_contact: visually_impaired_contact;
                 try {
                     if (Build.VERSION.SDK_INT > 22) {
                         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -236,12 +277,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         }
 
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:" + "8851849908"));
+                        callIntent.setData(Uri.parse("tel:" + contact));
                         startActivity(callIntent);
 
                     } else {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:" + "8851849908"));
+                        callIntent.setData(Uri.parse("tel:" + contact));
                         startActivity(callIntent);
                     }
                 } catch (Exception ex) {
@@ -249,6 +290,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 }
             }
         });
+    }
+
+    private void setOption(boolean b) {
+        if(b){
+            checkLocationOrEmergency.setText("EMERGENCY");
+            googleMap.setVisibility(View.VISIBLE);
+            shareLocation.setVisibility(View.VISIBLE);
+            connectArduino.setVisibility(View.VISIBLE);
+            pause.setVisibility(View.VISIBLE);
+        }else{
+            checkLocationOrEmergency.setText("CHECK LOCATION");
+        }
+        emergency.setVisibility(View.VISIBLE);
     }
 
     public void setUiEnabled(boolean bool) {

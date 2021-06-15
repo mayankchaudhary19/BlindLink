@@ -10,7 +10,8 @@ public class SharedPref
     public static final String HOME_LATITUDE = "HOME_LATITUDE";
     public static final String HOME_LONGITUDE = "HOME_LONGITUDE";
     public static final String CAREGIVER_CONTACT = "CAREGIVER_CONTACT";
-    public static final String CAREGIVER_EMAIL = "CAREGIVER_EMAIL";
+    public static final String VISUALLY_IMPAIRED_CONTACT = "VISUALLY_IMPAIRED_CONTACT";
+    public static final String USER_TYPE = "USER_TYPE";
     private SharedPref()
     {
 

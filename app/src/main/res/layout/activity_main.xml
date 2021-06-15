@@ -25,7 +25,6 @@
         android:text="Name"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/profileImage"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
         app:layout_constraintStart_toEndOf="@+id/profileImage"
         app:layout_constraintTop_toTopOf="@+id/profileImage" />
 
@@ -49,6 +48,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             app:cardCornerRadius="15dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,7 +73,7 @@
                 <!--                    app:tint="@color/colorAccent" />-->
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/check_location_or_emergency"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -96,6 +96,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             app:cardCornerRadius="15dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -141,6 +142,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             app:cardCornerRadius="15dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -187,6 +189,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             app:cardCornerRadius="15dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -287,11 +290,10 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
                     android:src="@drawable/ic_baseline_play_circle_filled_24"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:tint="#304C52"
-                    tools:layout_editor_absoluteX="33dp"
-                    tools:layout_editor_absoluteY="36dp" />
+                    app:tint="#304C52" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
