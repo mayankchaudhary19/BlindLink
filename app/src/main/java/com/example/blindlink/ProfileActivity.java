@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         setContentView(R.layout.activity_profile);
 
         logoutBtn = findViewById(R.id.logoutBtn);
-        userName = findViewById(R.id.name);
+//        userName = findViewById(R.id.name);
         userEmail = findViewById(R.id.email);
         userId = findViewById(R.id.userId);
         profileImage = findViewById(R.id.profileImage);

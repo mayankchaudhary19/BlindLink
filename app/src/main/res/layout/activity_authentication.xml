@@ -10,72 +10,47 @@
 
     <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="180dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="325dp"
+            android:layout_height="403dp"
+            android:layout_marginTop="130dp"
+            android:layout_marginEnd="70dp"
+            android:src="@drawable/ic_blind_link_icon2"
+            android:translationX="-30dp"
+            app:layout_constraintEnd_toEndOf="@+id/appNametxt"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_blind_link_icon" />
-
-    <TextView
-            android:id="@+id/appNametxt3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
-            android:layout_marginEnd="40dp"
-            android:elevation="1dp"
-            android:fontFamily="sans-serif"
-            android:text="LINK"
-            android:textColor="@color/colorAccent"
-            android:textSize="70sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/appNametxt2" />
-
-    <TextView
-            android:id="@+id/appNametxt2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif"
-            android:text="BLIND"
-            android:textColor="@color/colorPrimary"
-            android:textSize="70sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/appNametxt"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
             android:id="@+id/appNametxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:elevation="1dp"
             android:fontFamily="sans-serif"
-            android:text="BLIND"
-            android:textColor="@color/colorAccent"
-            android:textSize="70sp"
+            android:text="BLIND\nLINK"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/colorPrimary"
+            android:textSize="68dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-            android:id="@+id/appNametxt4"
+            android:id="@+id/appNametxt5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="18dp"
+            android:elevation="1dp"
             android:fontFamily="sans-serif"
-            android:text="LINK"
+            android:text="BLIND\nLINK"
+            android:textAlignment="viewEnd"
             android:textColor="@color/colorPrimary"
-            android:textSize="70sp"
+            android:textSize="68dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/appNametxt3"
-            app:layout_constraintTop_toTopOf="@+id/appNametxt3" />
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
             android:id="@+id/textView"
@@ -84,16 +59,20 @@
             android:layout_above="@+id/sign_in_button"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="12dp"
-            android:text="Account for caregiver and visually-impaired person are linked."
+            android:layout_marginBottom="20dp"
+            android:justificationMode="inter_word"
+            android:text="Account for caregiver and visually impaired person are linked. Please login on both devices with same account."
+            android:textAlignment="viewStart"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
             app:layout_constraintEnd_toEndOf="@+id/sign_in_button"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/sign_in_button" />
 
     <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
+            app:layout_constraintCircleRadius="20dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="16dp"
