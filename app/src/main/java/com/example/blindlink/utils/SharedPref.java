@@ -4,22 +4,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class SharedPref
-{
+import com.example.blindlink.MainActivity;
+
+public class SharedPref {
     private static SharedPreferences mSharedPref;
     public static final String HOME_LATITUDE = "HOME_LATITUDE";
     public static final String HOME_LONGITUDE = "HOME_LONGITUDE";
     public static final String CAREGIVER_CONTACT = "CAREGIVER_CONTACT";
     public static final String VISUALLY_IMPAIRED_CONTACT = "VISUALLY_IMPAIRED_CONTACT";
+    public static final String VISUALLY_IMPAIRED_ADDRESS = "VISUALLY_IMPAIRED_ADDRESS";
     public static final String USER_TYPE = "USER_TYPE";
-    private SharedPref()
-    {
+
+    private SharedPref() {
 
     }
 
-    public static void init(Context context)
-    {
-        if(mSharedPref == null)
+    public static void init(Context context) {
+        if (mSharedPref == null)
             mSharedPref = context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
     }
 
@@ -51,4 +52,11 @@ public class SharedPref
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
         prefsEditor.putInt(key, value).commit();
     }
+
+    public static void clearPref() {
+        SharedPreferences.Editor prefsEditor = mSharedPref.edit();
+        prefsEditor.clear();
+        prefsEditor.apply();
+    }
+
 }

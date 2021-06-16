@@ -44,49 +44,62 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AccountActivity extends AppCompatActivity {
 
     private Pattern VALID_CONTACT_REGEX = Pattern.compile("^((?!(0))[0-9]{10})$");
-    private CircleImageView profileImg;
     private TextInputEditText visuallyImpairedContact, caregiverContact, visuallyImpairedAddress;
-    private TextView saveChanges, setHomeAddr;
+    private TextView saveChanges, setHomeAddr, profileusername;
+    private ImageView back;
     int PERMISSION_ID = 44;
-
     float Latitude, Longitude;
-
     FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-
-        profileImg = findViewById(R.id.profile_image);
+        getSupportActionBar().hide();
         visuallyImpairedContact = findViewById(R.id.visually_impaired_contact);
         caregiverContact = findViewById(R.id.caregiver_contact);
         saveChanges = findViewById(R.id.saveChanges_btn);
         setHomeAddr = findViewById(R.id.set_home_addr);
         visuallyImpairedAddress = findViewById(R.id.visually_impaired_addr);
-
+        profileusername = findViewById(R.id.profileusername);
+        back = findViewById(R.id.img_back);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-
         SharedPref.init(AccountActivity.this);
+        String userType = SharedPref.read(SharedPref.USER_TYPE, "");
+        String caregiver_contact = SharedPref.read(SharedPref.CAREGIVER_CONTACT, "");//read int in shared preference.
+        String visually_impaired_contact = SharedPref.read(SharedPref.VISUALLY_IMPAIRED_CONTACT, "");//read int in shared preference.
+        String visually_impaired_addr = SharedPref.read(SharedPref.VISUALLY_IMPAIRED_ADDRESS, "");//read int in shared preference.
+
+        if(userType.equals("caregiver")){
+            profileusername.setText("Hello Caregiver,");
+        }else{
+            profileusername.setText("Hello Friend,");
+        }
+        visuallyImpairedAddress.setText(visually_impaired_addr);
+        visuallyImpairedContact.setText(visually_impaired_contact);
+        caregiverContact.setText(caregiver_contact);
 
 //        Toast.makeText(this, ""+getLocationFromAddress(AccountActivity.this, "634, R. K. Puram, New Delhi-110022"), Toast.LENGTH_SHORT).show();
-
         setHomeAddr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // method to get the location
                 getLastLocation();
+                //TODO: LOCATION
 //                SharedPref.write(SharedPref.HOME_LATITUDE, "XXXX");//save string in shared preference.
 //                SharedPref.write(SharedPref.HOME_LONGITUDE, "25");//save int in shared preference.
             }
         });
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (caregiverContact.getText().toString().isEmpty()) {
                     caregiverContact.setError("Required!");
                     return;
@@ -95,7 +108,6 @@ public class AccountActivity extends AppCompatActivity {
                     caregiverContact.setError("Invalid Phone Number");
                     return;
                 }
-
                 if (visuallyImpairedContact.getText().toString().isEmpty()) {
                     visuallyImpairedContact.setError("Required!");
                     return;
@@ -104,37 +116,29 @@ public class AccountActivity extends AppCompatActivity {
                     visuallyImpairedContact.setError("Invalid Phone Number");
                     return;
                 }
-
                 SharedPref.write(SharedPref.CAREGIVER_CONTACT, caregiverContact.getText().toString());//save string in shared preference.
+                SharedPref.write(SharedPref.VISUALLY_IMPAIRED_ADDRESS, visuallyImpairedAddress.getText().toString());//save string in shared preference.
                 SharedPref.write(SharedPref.VISUALLY_IMPAIRED_CONTACT, visuallyImpairedContact.getText().toString());//save int in shared preference.
-
-                Toast.makeText(AccountActivity.this, ""+getLocationFromAddress(AccountActivity.this, visuallyImpairedAddress.getText().toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountActivity.this, "" + getLocationFromAddress(AccountActivity.this, visuallyImpairedAddress.getText().toString()), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
-
         Geocoder coder = new Geocoder(context);
         List<Address> address;
         LatLng p1 = null;
-
         try {
             // May throw an IOException
             address = coder.getFromLocationName(strAddress, 5);
             if (address == null) {
                 return null;
             }
-
             Address location = address.get(0);
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
-
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
         } catch (IOException ex) {
-
             ex.printStackTrace();
         }
-
         return p1;
     }
 
@@ -142,10 +146,8 @@ public class AccountActivity extends AppCompatActivity {
     private void getLastLocation() {
         // check if permissions are given
         if (checkPermissions()) {
-
             // check if location is enabled
             if (isLocationEnabled()) {
-
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
@@ -153,7 +155,7 @@ public class AccountActivity extends AppCompatActivity {
                         if (location == null) {
                             requestNewLocationData();
                         } else {
-                            Toast.makeText(AccountActivity.this, ""+location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AccountActivity.this, "" + location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
 //                            latitudeTextView.setText(location.getLatitude() + "");
 //                            longitTextView.setText(location.getLongitude() + "");
                         }
@@ -173,7 +175,6 @@ public class AccountActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
-
         // Initializing LocationRequest
         // object with appropriate methods
         LocationRequest mLocationRequest = new LocationRequest();
@@ -181,7 +182,6 @@ public class AccountActivity extends AppCompatActivity {
         mLocationRequest.setInterval(5);
         mLocationRequest.setFastestInterval(0);
         mLocationRequest.setNumUpdates(1);
-
         // setting LocationRequest
         // on FusedLocationClient
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -193,7 +193,7 @@ public class AccountActivity extends AppCompatActivity {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
-            Toast.makeText(AccountActivity.this, ""+mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AccountActivity.this, "" + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude(), Toast.LENGTH_SHORT).show();
 //            latitudeTextView.setText("Latitude: " + mLastLocation.getLatitude() + "");
 //            longitTextView.setText("Longitude: " + mLastLocation.getLongitude() + "");
         }
@@ -202,7 +202,6 @@ public class AccountActivity extends AppCompatActivity {
     // method to check for permissions
     private boolean checkPermissions() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-
         // If we want background location
         // on Android 10.0 and higher,
         // use:

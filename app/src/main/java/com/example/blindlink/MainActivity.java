@@ -43,6 +43,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -50,33 +51,20 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     public final String ACTION_USB_PERMISSION = "com.hariharan.arduinousb.USB_PERMISSION";
 
-    TextView logoutBtn;
-    TextView userName;
-    ImageView profileImage;
+    private ImageView pause, logoutBtn;
+    private CircleImageView profileImage;
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
-
-    private CardView emergency;
-    private CardView googleMap;
-    private CardView shareLocation;
-    private CardView connectArduino;
-    private ImageView pause;
-    public static FirebaseUser currentUser;
-    private FirebaseAuth firebaseAuth;
-
-    private long mLastClickTime = 0;
-
+    private CardView emergency, googleMap, shareLocation, connectArduino, call;
     private TextView checkLocationOrEmergency;
-
-    //call
-    private CardView call;
-//
-//    private Dialogs user
-
+    private String contact = "";
+    private String home_lat, home_long, user_type, caregiver_contact, visually_impaired_contact;
     UsbManager usbManager;
     UsbDevice device;
     UsbSerialDevice serialPort;
@@ -146,33 +134,30 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         SharedPref.init(MainActivity.this);
 
-        final String home_lat = SharedPref.read(SharedPref.HOME_LATITUDE, null);//read string in shared preference.
-        final String home_long = SharedPref.read(SharedPref.HOME_LONGITUDE, null);//read int in shared preference.
-        final String user_type = SharedPref.read(SharedPref.USER_TYPE, null);//read int in shared preference.
-        final String caregiver_contact = SharedPref.read(SharedPref.CAREGIVER_CONTACT, null);//read int in shared preference.
-        final String visually_impaired_contact = SharedPref.read(SharedPref.VISUALLY_IMPAIRED_CONTACT, null);//read int in shared preference.
+        home_lat = SharedPref.read(SharedPref.HOME_LATITUDE, "");//read string in shared preference.
+        home_long = SharedPref.read(SharedPref.HOME_LONGITUDE, "");//read int in shared preference.
+        user_type = SharedPref.read(SharedPref.USER_TYPE, "");//read int in shared preference.
+        caregiver_contact = SharedPref.read(SharedPref.CAREGIVER_CONTACT, "");//read int in shared preference.
+        visually_impaired_contact = SharedPref.read(SharedPref.VISUALLY_IMPAIRED_CONTACT, "");//read int in shared preference.
 
         usbManager = (UsbManager) getSystemService(this.USB_SERVICE);
 
-        //call
         call = findViewById(R.id.call);
         emergency = findViewById(R.id.emergency);
         googleMap = findViewById(R.id.google_map);
         shareLocation = findViewById(R.id.share_location);
         connectArduino = findViewById(R.id.connect_arduino);
         pause = findViewById(R.id.pause);
-
-        logoutBtn = findViewById(R.id.logoutBtn);
-        userName = findViewById(R.id.name);
+        logoutBtn = findViewById(R.id.logout_btn);
         profileImage = findViewById(R.id.profileImage);
 
         checkLocationOrEmergency = findViewById(R.id.check_location_or_emergency);
 
-        userName.setOnClickListener(new View.OnClickListener() {
+        profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent5 = new Intent(MainActivity.this, AccountActivity.class);
-                    startActivity(intent5);
+                startActivity(intent5);
             }
         });
 
@@ -185,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        if(user_type==null){
+        if (user_type.equals("")) {
             final Dialog userDialog = Dialogs.setUserDialog(MainActivity.this);
             userDialog.show();
             TextView caregiverBtn = userDialog.findViewById(R.id.caregiver_user_btn);
@@ -196,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 public void onClick(View v) {
                     SharedPref.write(SharedPref.USER_TYPE, "caregiver");//read int in shared preference.
                     userDialog.dismiss();
+                    setOption(false);
                 }
             });
 
@@ -204,11 +190,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 public void onClick(View v) {
                     SharedPref.write(SharedPref.USER_TYPE, "visually-impaired");//read int in shared preference.
                     userDialog.dismiss();
+                    setOption(true);
                 }
             });
-        }else if(user_type.equals("caregiver")){
+        } else if (user_type.equals("caregiver")) {
             setOption(false);
-        }else{
+        } else {
             setOption(true);
         }
 
@@ -221,7 +208,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                             @Override
                             public void onResult(Status status) {
                                 if (status.isSuccess()) {
-                                    gotoMainActivity();
+                                    SharedPref.clearPref();
+                                    Intent intent = new Intent(MainActivity.this, AuthenticationActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Session not close", Toast.LENGTH_LONG).show();
                                 }
@@ -242,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onClick(View view) {
 //                INTENT ON MAPS
-                Uri gmmIntentUri = Uri.parse("google.navigation:q="+home_lat+","+home_long+"&mode=w");
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + home_lat + "," + home_long + "&mode=w");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
@@ -269,53 +259,60 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
 
+        contact = user_type.equals("caregiver") ? caregiver_contact : visually_impaired_contact;
+
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String contact = user_type.equals("caregiver") ? caregiver_contact: visually_impaired_contact;
-                try {
-                    if (Build.VERSION.SDK_INT > 22) {
-                        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 101);
-
-                            return;
+                if (!contact.equals("")) {
+                    try {
+                        if (Build.VERSION.SDK_INT > 22) {
+                            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 101);
+                                try {
+                                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                    callIntent.setData(Uri.parse("tel:" + contact));
+                                    startActivity(callIntent);
+                                } catch (Error ignored) {
+                                }
+                                return;
+                            }
+                            Intent callIntent = new Intent(Intent.ACTION_CALL);
+                            callIntent.setData(Uri.parse("tel:" + contact));
+                            startActivity(callIntent);
+                        } else {
+                            Intent callIntent = new Intent(Intent.ACTION_CALL);
+                            callIntent.setData(Uri.parse("tel:" + contact));
+                            startActivity(callIntent);
                         }
-
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:" + contact));
-                        startActivity(callIntent);
-
-                    } else {
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:" + contact));
-                        startActivity(callIntent);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } else {
+                    Toast.makeText(MainActivity.this, "Please add contact in account section!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
     }
 
     private void setOption(boolean b) {
-        if(b){
+        if (b) {
             checkLocationOrEmergency.setText("EMERGENCY");
             googleMap.setVisibility(View.VISIBLE);
             shareLocation.setVisibility(View.VISIBLE);
             connectArduino.setVisibility(View.VISIBLE);
             pause.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             checkLocationOrEmergency.setText("CHECK LOCATION");
         }
         emergency.setVisibility(View.VISIBLE);
     }
 
     public void setUiEnabled(boolean bool) {
-        if(bool){
+        if (bool) {
             pause.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24);
-        }else{
+        } else {
             pause.setImageResource(R.drawable.ic_baseline_play_circle_filled_24);
         }
     }
@@ -371,7 +368,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -387,26 +383,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 }
             });
         }
+
+        home_lat = SharedPref.read(SharedPref.HOME_LATITUDE, "");//read string in shared preference.
+        home_long = SharedPref.read(SharedPref.HOME_LONGITUDE, "");//read int in shared preference.
+        user_type = SharedPref.read(SharedPref.USER_TYPE, "");//read int in shared preference.
+        caregiver_contact = SharedPref.read(SharedPref.CAREGIVER_CONTACT, "");//read int in shared preference.
+        visually_impaired_contact = SharedPref.read(SharedPref.VISUALLY_IMPAIRED_CONTACT, "");//read int in shared preference.
+
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
-            userName.setText(account.getDisplayName());
+//            userName.setText(account.getDisplayName());
             try {
                 Glide.with(this).load(account.getPhotoUrl()).into(profileImage);
             } catch (NullPointerException e) {
                 Toast.makeText(getApplicationContext(), "image not found", Toast.LENGTH_LONG).show();
             }
-
         } else {
-            gotoMainActivity();
+            Intent intent = new Intent(this, AuthenticationActivity.class);
+            startActivity(intent);
         }
-    }
-
-    private void gotoMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     @Override

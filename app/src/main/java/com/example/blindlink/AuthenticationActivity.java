@@ -40,9 +40,9 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
+        getSupportActionBar().hide();
 
         firebaseAuth = FirebaseAuth.getInstance();
-
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -117,7 +117,7 @@ public class AuthenticationActivity extends AppCompatActivity implements GoogleA
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         if(task.isSuccessful()){
-                            Toast.makeText(AuthenticationActivity.this, "Login ssuccessful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AuthenticationActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                             gotoProfile();
                         }else{
                             Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
