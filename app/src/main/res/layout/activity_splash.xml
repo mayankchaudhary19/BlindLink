@@ -9,47 +9,71 @@
     tools:context="com.example.blindlink.SplashActivity">
 
     <TextView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:text="Blind Link"
-        android:textColor="#000"
-        android:textStyle="bold"
-        android:textSize="50sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/appNametxt4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:fontFamily="sans-serif"
+            android:text="LINK"
+            android:textColor="@color/colorPrimary"
+            android:textSize="70sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/appNametxt3"
+            app:layout_constraintTop_toTopOf="@+id/appNametxt3" />
 
     <TextView
-        android:id="@+id/appNametxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:elevation="1dp"
-        android:fontFamily="sans-serif"
-        android:text="BLIND LINK"
-        android:textColor="@color/colorAccent"
-        android:textSize="70sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+            android:id="@+id/appNametxt3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
+            android:layout_marginEnd="40dp"
+            android:elevation="1dp"
+            android:fontFamily="sans-serif"
+            android:text="LINK"
+            android:textColor="@color/colorAccent"
+            android:textSize="70sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/appNametxt2" />
 
     <TextView
-        android:id="@+id/appNametxt2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="5dp"
-        android:fontFamily="sans-serif"
-        android:text="BLIND LINK"
-        android:textColor="#BE6BF6DE"
-        android:textSize="70sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="58dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+            android:id="@+id/appNametxt2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif"
+            android:text="BLIND"
+            android:textColor="@color/colorPrimary"
+            android:textSize="70sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/appNametxt"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+            android:id="@+id/appNametxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="16dp"
+            android:elevation="1dp"
+            android:fontFamily="sans-serif"
+            android:text="BLIND"
+            android:textColor="@color/colorAccent"
+            android:textSize="70sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="180dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_blind_link_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
