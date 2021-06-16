@@ -77,6 +77,24 @@
             app:layout_constraintStart_toStartOf="@+id/profileusername"
             app:layout_constraintTop_toBottomOf="@+id/saveChanges_btn" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Visually impaired Address"
+            app:layout_constraintEnd_toEndOf="@+id/textView6"
+            app:layout_constraintStart_toStartOf="@+id/textView6"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/visually_impaired_addr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/profileusername"
             android:layout_width="wrap_content"
@@ -167,7 +185,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout3"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

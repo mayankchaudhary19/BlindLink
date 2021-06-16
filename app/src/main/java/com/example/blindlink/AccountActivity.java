@@ -108,7 +108,7 @@ public class AccountActivity extends AppCompatActivity {
                 SharedPref.write(SharedPref.CAREGIVER_CONTACT, caregiverContact.getText().toString());//save string in shared preference.
                 SharedPref.write(SharedPref.VISUALLY_IMPAIRED_CONTACT, visuallyImpairedContact.getText().toString());//save int in shared preference.
 
-                Toast.makeText(AccountActivity.this, ""+getLocationFromAddress(AccountActivity.this, visuallyImpairedAddress.getText().toString()), Toast.LENGTH_SHORT).show();;
+                Toast.makeText(AccountActivity.this, ""+getLocationFromAddress(AccountActivity.this, visuallyImpairedAddress.getText().toString()), Toast.LENGTH_SHORT).show();
             }
         });
 

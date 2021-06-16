@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     UsbSerialDevice serialPort;
     UsbDeviceConnection connection;
 
-
     UsbSerialInterface.UsbReadCallback mCallback = new UsbSerialInterface.UsbReadCallback() { //Defining a Callback which triggers whenever data is read.
         @Override
         public void onReceivedData(byte[] arg0) {
@@ -168,6 +167,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         profileImage = findViewById(R.id.profileImage);
 
         checkLocationOrEmergency = findViewById(R.id.check_location_or_emergency);
+
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent5 = new Intent(MainActivity.this, AccountActivity.class);
+                    startActivity(intent5);
+            }
+        });
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
