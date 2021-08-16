@@ -1,6 +1,7 @@
 # BlindLink
 
 ## Objective
+
 Designed a navigation system that identifies the direction and distance of the obstacles around the blind/visually impaired person. 
 
 Whenever an object will get detected in front of the user, the system triggers a vibration alarm. 
